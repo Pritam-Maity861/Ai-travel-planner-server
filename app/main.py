@@ -3,6 +3,7 @@ import sys
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
 from psycopg_pool import AsyncConnectionPool
 
@@ -54,6 +55,13 @@ def create_app() -> FastAPI:
             "Async multi-agent travel planner powered by FastAPI, LangGraph, and PostgreSQL."
         ),
         lifespan=lifespan,
+    )
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=False,
+        allow_methods=["*"],
+        allow_headers=["*"],
     )
     app.include_router(api_router, prefix="/api/v1")
     return app
